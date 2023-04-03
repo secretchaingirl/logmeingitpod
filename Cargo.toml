@@ -1,0 +1,59 @@
+[package]
+name = "logmein-vuejs-box"
+version = "0.1.0"
+authors = ["DDT <ddt@scrt.university>"]
+edition = "2021"
+description = "Secret Box app for the Richie Rich contract"
+licence = "MIT"
+
+exclude = [
+  # Those files are rust-optimizer artifacts. You might want to commit them for convenience but they should not be part of the source code publication.
+  "contract.wasm",
+  "hash.txt",
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+incremental = false
+overflow-checks = true
+
+[features]
+# for quicker tests, cargo test --lib
+# for more explicit tests, cargo test --features=backtraces
+backtraces = ["cosmwasm-std/backtraces"]
+
+[dependencies]
+cosmwasm-std = { git = "https://github.com/scrtlabs/cosmwasm", tag = "v1.1.9-secret", default-features = false }
+secret-toolkit = { git = "https://github.com/scrtlabs/secret-toolkit", tag = "v0.8.0", default-features = false, features = ["storage", "serialization", "utils", "permit", "viewing-key", "crypto"] }
+cosmwasm-storage = { git = "https://github.com/scrtlabs/cosmwasm", tag = "v1.1.9-secret" }
+
+# cosmwasm-std = { package = "secret-cosmwasm-std", version = "1.0.0", default-features = false }
+# secret-toolkit = { version = "0.7.0", default-features = false, features = ["storage", "serialization", "utils", "permit", "viewing-key", "crypto"] }
+# cosmwasm-storage = { package = "secret-cosmwasm-storage", version = "1.0.0" }
+
+schemars = "0.8.11"
+serde = { version = "1.0.114", default-features = false, features = ["derive"] }
+bincode2 = "2.0.1"
+base64 = "0.13.0"
+primitive-types = { version = "0.12.1", default-features = false }
+
+#x25519-dalek = "1.1"
+ed25519-dalek = "1.0.1"
+getrandom = { version = "0.2", features = ["js"] }
+rand_chacha = { version = "0.2.2", default-features = false }
+rand_core = { version =  "0.5.1", default-features = false }
+sha2 = { version = "0.10.0", default-features = false }
+
+[dev-dependencies]
+cosmwasm-schema = { version = "1.1.8" }
